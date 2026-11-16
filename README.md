@@ -1,45 +1,42 @@
-# How it works
+# Minimax Path Visualization
 
-#### This programm makes a set of images that describes graph state in each algorithm step
+Find and visualize a path whose largest edge weight is as small as possible.
+The Python demo uses a Dijkstra-style search on a directed graph and saves
+each step as a PNG using NetworkX and Matplotlib.
 
-# Example of generated graph state:
+![A minimax search step with color-coded nodes and highlighted predecessor edges](img/graph15.png)
 
-### Label in the top is the name of the file
-### Red edges define the optimal route tree
+## Example
 
-<p align="center">
- <img width="500px"  align="right"   src="img/graph15.png" alt="qr"/>
-</p>
+The demo graph has two routes from node `0` to node `8`.
 
+| Route | Largest edge weight | Sum of edge weights |
+| --- | ---: | ---: |
+| `0 → 1 → 2 → 4 → 6 → 8` | 7 | 16 |
+| `0 → 1 → 3 → 5 → 7 → 8` | **6** | 17 |
 
-### Node colors:
-- ![#FF0000](https://placehold.co/15x15/ff0000/ff0000.png) red    - passed
-- ![#00FF00](https://placehold.co/15x15/00ff00/00ff00.png) green  - current
-- ![#ffffff](https://placehold.co/15x15/ffff00/ffff00.png) yellow - neighbours of passed and current nodes
+The demo selects the second route because its heaviest edge has weight **6**.
+When considering an edge, the search takes the maximum of the current path
+score and that edge's weight. It keeps a lower score when it finds one.
 
-### Edges colors:
-- ![#FF0000](https://placehold.co/15x15/ff0000/ff0000.png) red   - passed
-- ![#000000](https://placehold.co/15x15/000000/000000.png) black - other
+## Run the demo
 
+From the repository root, install the dependencies and run the script.
 
-
-### Edge number: 
-- weight
-### Node numbers (from top to bottom):
-- node number
-- node weight (maximum edge's weight for edges in optimal root). default: 1000000
-- previous node. default: -1
-#### default means there isn't any optimal roots at this moment
-
-
-
-
-# How to use it
-
-#### Make your own graph like in example in `main.py` from start of *main* to `create_graph` function 
-#### To start creating images write:
-```python
-find_best_way(Graph, node_start, node_finish, edge_labels, n_graph)
+```bash
+python -m pip install networkx matplotlib
+python main.py
 ```
-where `n_graph` is number of first image to generate
-For example, if `n_graph = 10` the first image's name in `img` directory will be **graph10.png**
+
+The script saves numbered snapshots to [`img/`](img/). Running it again replaces
+snapshots with the same filenames. To try another graph, edit
+`edges_with_weights`, `start_node_values`, and the calls to `find_best_way` in
+[`main.py`](main.py).
+
+## Reading a snapshot
+
+- **Nodes:** green is the current node, red is visited, yellow is a candidate,
+  and cyan is unvisited. Each label lists the node ID, best score so far, and
+  predecessor. A score of `1000000` and predecessor `-1` are the initial values.
+- **Edges:** the number is its weight. Red marks a chosen predecessor edge;
+  black marks other edges.
